@@ -1,7 +1,7 @@
 CI Badge
 
-# Ansible template role
-basic Role to use going forward because I forget pieces
+# RabbitMQ Role
+The RabbitMQ role for Rocky Linux infrastructure
 
 ## Getting started
 Ensure all dependencies are installed and then follow the below process

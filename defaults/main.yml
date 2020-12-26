@@ -1,2 +1,24 @@
 ---
 # ansible default variables - most variables live here
+
+# You are expected to deploy the certificates yourself
+rabbitmq_tls_ca_cert: "/etc/pki/tls/certs/ca-bundle.crt"
+rabbitmq_tls_cert: "/etc/pki/tls/certs/{{ ansible_fqdn }}.crt"
+rabbitmq_tls_key: "/etc/pki/tls/private/{{ ansible_fqdn }}.key"
+rabbitmq_tls_link_dir: "/etc/rabbitmq/certs"
+rabbitmq_file_limit: 500000
+
+# You are expected to set these yourself in your playbook
+#rabbitmq_cookie_staging: ...
+#rabbitmq_cookie_production: ...
+
+# You are expected to set these yourself in your playbook
+#rabbitmq_admin_password_staging: ...
+#rabbitmq_admin_password_production: ...
+
+rabbitmq_plugins:
+  - rabbitmq_amqp1_0
+  - rabbitmq_auth_backend_ldap
+  - rabbitmq_auth_mechanism_ssl
+  - rabbitmq_management
+  - rabbitmq_mqtt
