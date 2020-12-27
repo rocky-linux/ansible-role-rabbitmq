@@ -9,16 +9,21 @@ rabbitmq_tls_link_dir: "/etc/rabbitmq/certs"
 rabbitmq_file_limit: 500000
 
 # You are expected to set these yourself in your playbook
-#rabbitmq_cookie_staging: ...
-#rabbitmq_cookie_production: ...
+rabbitmq_cookie: "NotASafeCookie"
+rabbitmq_admin_password: "NotASafePassword"
+rabbitmq_cluster_name: "default"
+rabbitmq_cluster_list:
+  - rabbitmq01.rockylinux.org
+  - rabbitmq02.rockylinux.org
+  - rabbitmq03.rockylinux.org
+rabbitmq_env: "default"
 
-# You are expected to set these yourself in your playbook
-#rabbitmq_admin_password_staging: ...
-#rabbitmq_admin_password_production: ...
-
+# You can override this in your playbooks as well
 rabbitmq_plugins:
   - rabbitmq_amqp1_0
   - rabbitmq_auth_backend_ldap
   - rabbitmq_auth_mechanism_ssl
   - rabbitmq_management
   - rabbitmq_mqtt
+  - rabbitmq_federation
+  - rabbitmq_federation_management

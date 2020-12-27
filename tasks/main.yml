@@ -1,2 +1,49 @@
 ---
-# tasks
+# RabbitMQ Tasks
+- name: Install required packages for RabbitMQ
+  yum:
+    name: rabbitmq-server
+    state: present
+
+- name: Deploy RabbitMQ configuration
+  template:
+    src: "etc/rabbitmq/{{ item }}.j2"
+
+- name: Deploy erlang cookie
+  copy:
+    owner: rabbitmq
+    group: rabbitmq
+    mode: '0600'
+    content: "{{ rabbitmq_cookie }}"
+    dest: "/var/lib/rabbitmq/.erlang.cookie"
+  notify:
+    - restart_rabbitmq
+
+- name: Create systemd override for RabbitMQ
+  file:
+    path: /etc/systemd/system/rabbitmq-server.service.d
+    state: directory
+
+- name: Override nofile limit for RabbitMQ
+  copy:
+    dest: /etc/systemd/system/rabbitmq-server.service.d/99-override.conf
+    content: |
+      [Service]
+      LimitNOFILE={{ rabbitmq_cluster_file_limit }}
+
+- name: Enable RabbitMQ Plugins
+  community.rabbitmq.rabbitmq_plugin:
+    names: "{{ rabbitmq_plugins | join(',') }}"
+    state: enabled
+
+- name: Users Tasks
+  include_tasks: users.yml
+
+- name: Vhost tasks
+  include_tasks: vhosts.yml
+
+- name: Topic Tasks
+  include_tasks: topics.yml
+
+- name: Federation Tasks
+  include_tasks: federation.yml
