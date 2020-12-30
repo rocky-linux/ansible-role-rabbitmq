@@ -1,1 +1,39 @@
 ---
+# Create our topics
+- name: Create the zmq.topic exchange in the pubsub vhost
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_exchange:
+    name: "zmq.topic"
+    exchange_type: "topic"
+    vhost: "/pubsub"
+    login_user: admin
+    login_password: "{{ rabbitmq_admin_password }}"
+  tags:
+    - rabbitmq_cluster
+
+- name: Create the zmq.topic exchange in the public pubsub vhost
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_exchange:
+    name: "zmq.topic"
+    exchange_type: "topic"
+    vhost: "/public_pubsub"
+    login_user: admin
+    login_password: "{{ rabbitmq_admin_password }}"
+  tags:
+    - rabbitmq_cluster
+
+- name: Forward all zmq.topic and amq.topic in public_pubsub
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_binding:
+    destination_type: exchange
+    name: zmq.topic
+    dest: amq.topic
+    routing_key: "#"
+    vhost: "/public_pubsub"
+    login_user: admin
+    login_password: "{{ rabbitmq_admin_password }}"
+  tags:
+    - rabbitmq_cluster

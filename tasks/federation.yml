@@ -1,1 +1,59 @@
 ---
+# Create necessary federation pieces
+# This public user can write UUID objects and read anything else
+- name: Create a public access user
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_user:
+    user: "rockypublic"
+    permissions:
+      - vhost:
+        configure_priv: "^(\\w{8}(-\\w{4}){3}-\\w{12})$"
+        write_priv: "^(\\w{8}(-\\w{4}){3}-\\w{12})$"
+        read_priv: ".*"
+    state: present
+  tags:
+    - rabbitmq_cluster
+
+# You will need to address the certificates yourself. Right now we are trying
+# to figure out how to deal with SNI using FreeIPA.
+# /etc/rabbitmq/pubsub_federation.pem
+# /etc/rabbitmq/pubsub_federation.key
+
+- name: Create a federation user
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_user:
+    user: pubsub_federation
+    permissions:
+      - vhost: /pubsub
+        configure_priv: "^federation.*"
+        write_priv: "^federation.*"
+        read_priv: ".*"
+    state: present
+  tags:
+    - rabbitmq_cluster
+
+- name: Configure Federation Upstream from pubsub to public
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_parameter:
+    component: "federation-upstream"
+    name: "pubsub-to-public_pubsub"
+    value: '{"uri": "amqps://pubsub_federation:@{{ rabbitmq_cluster_list[0]  }}/%2Fpubsub?cacertfile=%2Fetc%2Fipa%2Fca.crt&certfile=%2Fetc%2Frabbitmq%2Fpubsub_federation.pem&keyfile=%2Fetc%2Frabbitmq%2Fpubsub_federation.key&verify=verify_peer&fail_if_no_peer_cert=true&server_name_indication=disabled&auth_mechanism=external", "ack-mode": "on-confirm"}'
+    state: present
+    vhost: /public_pubsub
+  when: rabbitmq_enable_public
+
+- name: Configure a policy to federate the topic exchange to public
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_policy:
+    apply_to: exchanges
+    name: pubsub-to-public_pubsub
+    state: present
+    pattern: "^(amq|zmq)\\.topic$"
+    tags:
+      federation-upstream: "pubsub-to-public_pubsub"
+    vhost: /public_pubsub
+  when: rabbitmq_enable_public

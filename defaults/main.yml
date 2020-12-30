@@ -27,3 +27,10 @@ rabbitmq_plugins:
   - rabbitmq_mqtt
   - rabbitmq_federation
   - rabbitmq_federation_management
+
+# If you want monitoring, set these in your playbooks
+#rabbitmq_monitoring_username: mq-monitoring
+#rabbitmq_monitoring_password: NotASafePassword
+
+# Enable the public pubsub or not
+rabbitmq_enable_public: false

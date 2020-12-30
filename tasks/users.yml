@@ -1,1 +1,61 @@
 ---
+# No guest users
+- name: Remove guest user
+  community.rabbitmq.rabbitmq_user:
+    user: guest
+    state: absent
+  tags:
+    - rabbitmq_cluster
+
+# Add the admin user
+- name: Create the admin user for our vhosts
+  community.rabbitmq.rabbitmq_user:
+    user: rockyadmin
+    password: "{{ rabbitmq_admin_password }}"
+    vhost: "{{ item }}"
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    tags: administrator
+  when: inventory_hostname.startswith('rabbitmq01')
+  with_items:
+    - /
+    - /pubsub
+    - /public_pubsub
+  tags:
+    - rabbitmq_cluster
+
+- name: Drop the admin password in a file for admin operations
+  copy:
+    dest: /root/.rabbitmqpass
+    content: "{{ rabbitmq_admin_password }}"
+    mode: '0600'
+    owner: root
+    group: root
+  tags:
+    - rabbitmq_cluster
+
+# Create a monitoring user as long as the vars are set
+- name: Create monitoring user
+  community.rabbitmq.rabbitmq_user:
+    user: "{{ rabbitmq_monitoring_username }}"
+    password: "{{ rabbitmq_monitoring_password }}"
+    update_password: always
+    permissions:
+      - vhost: /
+        configure_priv: "^$"
+        read_priv: "^$"
+        write_priv: "^$"
+      - vhost: /pubsub
+        configure_priv: "^$"
+        read_priv: "^$"
+        write_priv: "^$"
+      - vhost: /public_pubsub
+        configure_priv: "^$"
+        read_priv: "^$"
+        write_priv: "^$"
+    tags: monitoring
+  when:
+    - inventory_hostname.startswith('rabbitmq01')
+    - rabbitmq_monitoring_username
+    - rabbitmq_monitoring_password

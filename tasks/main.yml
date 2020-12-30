@@ -36,11 +36,17 @@
     names: "{{ rabbitmq_plugins | join(',') }}"
     state: enabled
 
-- name: Users Tasks
-  include_tasks: users.yml
+- name: Ensure RabbitMQ is running
+  service:
+    name: rabbitmq-server
+    state: started
+    enabled: true
 
 - name: Vhost tasks
   include_tasks: vhosts.yml
+
+- name: Users Tasks
+  include_tasks: users.yml
 
 - name: Topic Tasks
   include_tasks: topics.yml
