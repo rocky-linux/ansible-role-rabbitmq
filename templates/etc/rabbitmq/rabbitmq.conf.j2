@@ -1,0 +1,46 @@
+listeners.ssl.default = 5671
+listeners.tcp.default = 5672
+
+num_acceptors.tcp = 10
+num_acceptors.ssl = 10
+
+reverse_dns_lookups = true
+
+rabbitmq_tls_ca_cert: "/etc/pki/tls/certs/ca-bundle.crt"
+rabbitmq_tls_cert: "/etc/pki/tls/certs/{{ ansible_fqdn  }}.crt"
+rabbitmq_tls_key: "/etc/pki/tls/private/{{ ansible_fqdn  }}.key"
+
+ssl_options.verify               = verify_peer
+ssl_options.fail_if_no_peer_cert = false
+ssl_options.cacertfile           = {{ rabbitmq_tls_ca_cert }}
+ssl_options.certfile             = {{ rabbitmq_tls_cert }}
+ssl_options.keyfile              = {{ rabbitmq_tls_key }}
+
+# Authentication Backends
+auth_backends.1.authn = ldap
+auth_backends.1.authz = internal
+auth_backends.2       = internal
+auth_mechanisms.1     = PLAIN
+auth_mechanisms.2     = EXTERNAL
+auth_mechanisms.3     = AMQPLAIN
+
+ssl_cert_login_from   = common_name
+auth_ldap.dn_lookup_bind.user_dn  = {{ rocky_ldap_bind_dn }}
+auth_ldap.dn_lookup_bind.password = {{ rocky_ldap_bind_pw }}
+auth_ldap.dn_lookup_attribute     = uid
+auth_ldap.dn_lookup_base          = {{ rocky_ldap_account_basedn }}
+auth_ldap.port                    = 389
+{% for ldapsrv in rabbitmq_ldap_servers %}
+auth_ldap.servers.{{ loop.index }} = {{ ldapsrv }}
+{% endfor %}
+
+cluster_name = {{ rabbitmq_cluster_name }}
+password_hashing_module = rabbit_password_hashing_sha256
+
+uster_partition_handling    = autoheal
+cluster_formation.node_type = disc
+
+product.name    = RockyMQ!
+product.version = 0.0.1
+
+disk_free_limit.relative = 2.0

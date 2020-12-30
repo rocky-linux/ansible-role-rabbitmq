@@ -17,6 +17,9 @@ rabbitmq_cluster_list:
   - rabbitmq02.rockylinux.org
   - rabbitmq03.rockylinux.org
 rabbitmq_env: "default"
+rabbitmq_ldap_servers:
+  - ipa001.rockylinux.org
+  - ipa002.rockylinux.org
 
 # You can override this in your playbooks as well
 rabbitmq_plugins:

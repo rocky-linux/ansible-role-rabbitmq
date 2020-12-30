@@ -5,7 +5,7 @@
   run_once: true
   delegate_to: "{{ rabbitmq_cluster_list[0] }}"
   community.rabbitmq.rabbitmq_user:
-    user: "rockypublic"
+    user: rockypubsub
     permissions:
       - vhost:
         configure_priv: "^(\\w{8}(-\\w{4}){3}-\\w{12})$"
@@ -40,7 +40,7 @@
   community.rabbitmq.rabbitmq_parameter:
     component: "federation-upstream"
     name: "pubsub-to-public_pubsub"
-    value: '{"uri": "amqps://pubsub_federation:@{{ rabbitmq_cluster_list[0]  }}/%2Fpubsub?cacertfile=%2Fetc%2Fipa%2Fca.crt&certfile=%2Fetc%2Frabbitmq%2Fpubsub_federation.pem&keyfile=%2Fetc%2Frabbitmq%2Fpubsub_federation.key&verify=verify_peer&fail_if_no_peer_cert=true&server_name_indication=disabled&auth_mechanism=external", "ack-mode": "on-confirm"}'
+    value: 'novalue'
     state: present
     vhost: /public_pubsub
   when: rabbitmq_enable_public

@@ -8,6 +8,10 @@
 - name: Deploy RabbitMQ configuration
   template:
     src: "etc/rabbitmq/{{ item }}.j2"
+    dest: "etc/rabbitmq/{{ item }}"
+    owner: rabbitmq
+    group: rabbitmq
+    mode: '0644'
 
 - name: Deploy erlang cookie
   copy:
@@ -23,10 +27,16 @@
   file:
     path: /etc/systemd/system/rabbitmq-server.service.d
     state: directory
+    owner: root
+    group: root
+    mode: '0755'
 
 - name: Override nofile limit for RabbitMQ
   copy:
     dest: /etc/systemd/system/rabbitmq-server.service.d/99-override.conf
+    owner: root
+    group: root
+    mode: '0644'
     content: |
       [Service]
       LimitNOFILE={{ rabbitmq_cluster_file_limit }}
@@ -35,6 +45,22 @@
   community.rabbitmq.rabbitmq_plugin:
     names: "{{ rabbitmq_plugins | join(',') }}"
     state: enabled
+
+- name: Open applicable firewall rules
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  loop:
+    - 1883/tcp
+    - 4369/tcp
+    - 5671/tcp
+    - 5672/tcp
+    - 8883/tcp
+    - 15672/tcp
+    - 25672/tcp
+    - 35672-35682/tcp
 
 - name: Ensure RabbitMQ is running
   service:

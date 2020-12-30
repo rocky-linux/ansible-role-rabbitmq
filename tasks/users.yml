@@ -13,9 +13,9 @@
     user: rockyadmin
     password: "{{ rabbitmq_admin_password }}"
     vhost: "{{ item }}"
-    configure_priv: .*
-    read_priv: .*
-    write_priv: .*
+    configure_priv: ".*"
+    read_priv: ".*"
+    write_priv: ".*"
     tags: administrator
   when: inventory_hostname.startswith('rabbitmq01')
   with_items:
