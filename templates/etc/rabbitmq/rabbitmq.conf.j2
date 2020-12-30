@@ -30,6 +30,9 @@ auth_ldap.dn_lookup_bind.password = {{ rocky_ldap_bind_pw }}
 auth_ldap.dn_lookup_attribute     = uid
 auth_ldap.dn_lookup_base          = {{ rocky_ldap_account_basedn }}
 auth_ldap.port                    = 389
+auth_ldap.connection_pool_size    = 256
+auth_ldap.idle_timeout            = 120000
+auth_ldap.use_starttls            = true
 {% for ldapsrv in rabbitmq_ldap_servers %}
 auth_ldap.servers.{{ loop.index }} = {{ ldapsrv }}
 {% endfor %}

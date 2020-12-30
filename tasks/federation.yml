@@ -40,10 +40,12 @@
   community.rabbitmq.rabbitmq_parameter:
     component: "federation-upstream"
     name: "pubsub-to-public_pubsub"
-    value: 'novalue'
+    value: '{"uri": "amqps://pubsub_federation:{{ pubsub_federation_pass }}@{{ rabbitmq_cluster_list[0] }}/%2Fpubsub", "ack-mode": "on-confirm"}'
     state: present
     vhost: /public_pubsub
-  when: rabbitmq_enable_public
+  when:
+    - rabbitmq_enable_public
+    - pubsub_federation_pass
 
 - name: Configure a policy to federate the topic exchange to public
   run_once: true
@@ -56,4 +58,6 @@
     tags:
       federation-upstream: "pubsub-to-public_pubsub"
     vhost: /public_pubsub
-  when: rabbitmq_enable_public
+  when:
+    - rabbitmq_enable_public
+    - pubsub_federation_pass
