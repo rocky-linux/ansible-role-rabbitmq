@@ -40,10 +40,15 @@ auth_ldap.servers.{{ loop.index }} = {{ ldapsrv }}
 cluster_name = {{ rabbitmq_cluster_name }}
 password_hashing_module = rabbit_password_hashing_sha256
 
-uster_partition_handling    = autoheal
+cluster_partition_handling  = autoheal
 cluster_formation.node_type = disc
 
 product.name    = RockyMQ!
 product.version = 0.0.1
 
 disk_free_limit.relative = 2.0
+
+# Cluster Nodes
+{% for mqsrv in rabbitmq_cluster_list %}
+cluster_formation.classic_config.nodes.{{ loop.index }} = {{ mqsrv }}
+{% endfor %}
