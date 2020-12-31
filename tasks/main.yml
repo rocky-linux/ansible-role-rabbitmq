@@ -79,3 +79,6 @@
 
 - name: Federation Tasks
   include_tasks: federation.yml
+
+- name: Common Apps
+  include_tasks: commonapps.yml

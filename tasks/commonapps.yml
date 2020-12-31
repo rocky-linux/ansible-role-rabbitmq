@@ -1,0 +1,108 @@
+---
+# Common App Queues
+# GitLab + Others like CI
+- name: Rocky Automation User
+  run_once: true
+  include_tasks: runners/mkuser.yml
+  vars:
+    username: rockyautomation
+  tags:
+    - ci
+
+- name: Rocky Automation Queue
+  run_once: true
+  include_tasks: runners/mkqueue.yml
+  vars:
+    username: rockyautomation
+    queue_name: rockyautomation-ci
+    # 10 Days
+    message_ttl: 864000000
+    routing_keys:
+      - "org.rockylinux.{{ rabbitmq_env }}.gitlab.#"
+      # Testing only
+      - "org.rockylinux.ci.#"
+  tags:
+    - ci
+
+- name: OSCI
+  run_once: true
+  include_tasks: runners/mkqueue.yml
+  vars:
+    username: "osci-pipeline-{{ rabbitmq_env }}"
+    queue_name: "{{ item }}-{{ rabbitmq_env }}"
+    message_ttl: 432000000
+    routing_keys:
+      - "org.rockylinux.ci.#"
+  loop:
+    - osci-pipeline-queue-0
+    - osci-pipeline-queue-1
+    - osci-pipeline-queue-2
+    - osci-pipeline-queue-3
+    - osci-pipeline-queue-4
+    - osci-pipeline-queue-5
+  tags:
+    - osci
+# End GitLab and CI
+
+# Koji User
+- name: Rocky Koji User
+  run_once: true
+  include_tasks: runners/mkuser.yml
+  vars:
+    username: rockykoji
+# End Koji
+
+# Potential ODCS
+- name: Create the rocky-odcs vhost
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_vhost:
+    name: /rocky-odcs
+    state: present
+  tags:
+    - odcs
+
+- name: Configure the odcs HA Policy
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_policy:
+    name: HA
+    apply_to: queues
+    pattern: ".*"
+    tags:
+      ha-mode: all
+      ha-sync-mode: automatic
+      ha-sync-batch-size: 10000
+    vhost: /rocky-odcs
+  tags:
+    - odcs
+
+- name: Add a policy to keep the odcs vhost swept
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_policy:
+    name: pubsub_sweeper
+    apply_to: queues
+    state: present
+    pattern: ".*"
+    tags:
+      expires: 111600000
+      max-length-bytes: 1073741824
+    vhost: /rocky-odcs
+  tags:
+    - odcs
+
+# To consider: Separate ODCS Admin Account?
+- name: Grant the rockyadmin user access to the rocky-odcs vhost
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_user:
+    user: rockyadmin
+    vhost: /rocky-odcs
+    configure_priv: ".*"
+    read_priv: ".*"
+    write_priv: ".*"
+    tags: administrator
+  tags:
+    - odcs
+# ODCS End

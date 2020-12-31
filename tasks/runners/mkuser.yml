@@ -1,0 +1,13 @@
+---
+# Creates a user account in RabbitMQ
+# This is used as a template for repeated tasks in the role
+- name: "Creating User Account {{ username }}"
+  community.rabbitmq.rabbitmq_user:
+    user: "{{ username }}"
+    vhost: "{{ vhost|default('/pubsub') }}"
+    read_priv: "^$"
+    write_priv: "amq\\.topic"
+    configure_priv: "^$"
+    state: present
+  tags:
+    - rabbitmq

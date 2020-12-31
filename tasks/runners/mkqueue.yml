@@ -1,0 +1,41 @@
+---
+# Creates a user account and queue in RabbitMQ
+# This is used as a template for repeated tasks in the role
+- name: "Creating User Account"
+  community.rabbitmq.rabbitmq_user:
+    user: "{{ username }}"
+    vhost: "{{ vhost|default('/pubsub') }}"
+    read_priv: "^(zmq\\.topic)|^(amq\\.topic)|({{ username  }}.*)$"
+    write_priv: "^(amq\\.topic)|({{ username  }}.*){% for queue in write_queues|default([]) %}|({{ queue  }}.*){% endfor %}$"
+    configure_priv: "^$"
+    state: present
+  tags:
+    - rabbitmq
+
+- name: "Create {{ queue_name }}"
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_queue:
+    name: "{{ queue_name }}"
+    vhost: "{{ vhost|default('/pubsub') }}"
+    auto_delete: false
+    durable: true
+    message_ttl: "{{ message_ttl|default('null') }}"
+    state: present
+    login_user: rockyadmin
+    login_password: "{{ rabbitmq_admin_password }}"
+  tags:
+    - rabbitmq
+
+- name: "Bind {{ queue_name }} to amq.topic exchange"
+  delegate_to: "{{ rabbitmq_cluster_list[0] }}"
+  community.rabbitmq.rabbitmq_binding:
+    name: "amq.topic"
+    destination: "{{ queue_name }}"
+    destination_type: queue
+    routing_key: "{{ item }}"
+    vhost: "{{ vhost|default('/pubsub') }}"
+    state: present
+    login_user: rockyadmin
+    login_password: "{{ rabbitmq_admin_password }}"
+  tags:
+    - rabbitmq

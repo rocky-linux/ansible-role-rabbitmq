@@ -1,5 +1,13 @@
 ---
 # Create necessary federation pieces
+
+# You will need to address the certificates yourself. Right now we are trying
+# to figure out how to deal with SNI using FreeIPA. So instead we're using a
+# service account in IPA instead using a password. This isn't ideal and we're
+# looking into finding a way to address this in an easier manner.
+# /etc/rabbitmq/pubsub_federation.pem
+# /etc/rabbitmq/pubsub_federation.key
+
 # This public user can write UUID objects and read anything else
 - name: Create a public access user
   run_once: true
@@ -7,18 +15,13 @@
   community.rabbitmq.rabbitmq_user:
     user: rockypubsub
     permissions:
-      - vhost:
+      - vhost: /public_pubsub
         configure_priv: "^(\\w{8}(-\\w{4}){3}-\\w{12})$"
         write_priv: "^(\\w{8}(-\\w{4}){3}-\\w{12})$"
         read_priv: ".*"
     state: present
   tags:
     - rabbitmq_cluster
-
-# You will need to address the certificates yourself. Right now we are trying
-# to figure out how to deal with SNI using FreeIPA.
-# /etc/rabbitmq/pubsub_federation.pem
-# /etc/rabbitmq/pubsub_federation.key
 
 - name: Create a federation user
   run_once: true
