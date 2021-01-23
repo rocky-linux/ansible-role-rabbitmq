@@ -5,6 +5,12 @@
     name: rabbitmq-server
     state: present
 
+- name: Enable SELinux boolean
+  ansible.posix.seboolean:
+    name: nis_enabled
+    persistent: true
+    state: true
+
 - name: Deploy RabbitMQ configuration
   template:
     src: "etc/rabbitmq/{{ item }}.j2"
@@ -46,7 +52,7 @@
 
 # We are doing it the command line way
 - name: Enable RabbitMQ Plugins
-  shell: "set -o pipefail && rabbitmq-plugins {{ rabbitmq_plugins | join(' ') }}"
+  shell: "set -o pipefail && rabbitmq-plugins enable {{ rabbitmq_plugins | join(' ') }}"
   changed_when: "1 != 1"
 
 - name: Open applicable firewall rules
