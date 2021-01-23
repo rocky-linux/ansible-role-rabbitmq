@@ -6,10 +6,6 @@ num_acceptors.ssl = 10
 
 reverse_dns_lookups = true
 
-rabbitmq_tls_ca_cert = "/etc/pki/tls/certs/ca-bundle.crt"
-rabbitmq_tls_cert    = "/etc/pki/tls/certs/{{ ansible_fqdn  }}.crt"
-rabbitmq_tls_key     = "/etc/pki/tls/private/{{ ansible_fqdn  }}.key"
-
 ssl_options.verify               = verify_peer
 ssl_options.fail_if_no_peer_cert = false
 ssl_options.cacertfile           = {{ rabbitmq_tls_ca_cert }}
