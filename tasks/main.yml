@@ -8,7 +8,7 @@
 - name: Deploy RabbitMQ configuration
   template:
     src: "etc/rabbitmq/{{ item }}.j2"
-    dest: "etc/rabbitmq/{{ item }}"
+    dest: "/etc/rabbitmq/{{ item }}"
     owner: rabbitmq
     group: rabbitmq
     mode: '0644'
@@ -42,7 +42,7 @@
     mode: '0644'
     content: |
       [Service]
-      LimitNOFILE={{ rabbitmq_cluster_file_limit }}
+      LimitNOFILE={{ rabbitmq_file_limit }}
 
 - name: Enable RabbitMQ Plugins
   community.rabbitmq.rabbitmq_plugin:
