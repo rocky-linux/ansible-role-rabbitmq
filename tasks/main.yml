@@ -44,10 +44,10 @@
       [Service]
       LimitNOFILE={{ rabbitmq_file_limit }}
 
+# We are doing it the command line way
 - name: Enable RabbitMQ Plugins
-  community.rabbitmq.rabbitmq_plugin:
-    names: "{{ rabbitmq_plugins | join(',') }}"
-    state: enabled
+  shell: "set -o pipefail && rabbitmq-plugins {{ rabbitmq_plugins | join(' ') }}"
+  changed_when: "1 != 1"
 
 - name: Open applicable firewall rules
   ansible.posix.firewalld:
