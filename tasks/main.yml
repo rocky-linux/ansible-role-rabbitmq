@@ -12,6 +12,9 @@
     owner: rabbitmq
     group: rabbitmq
     mode: '0644'
+  loop:
+    - rabbitmq.conf
+    - rabbitmq-env.conf
 
 - name: Deploy erlang cookie
   copy:
