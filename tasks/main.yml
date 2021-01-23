@@ -21,6 +21,8 @@
   loop:
     - rabbitmq.conf
     - rabbitmq-env.conf
+  notify:
+    - restart_rabbitmq
 
 - name: Deploy erlang cookie
   copy:
@@ -52,8 +54,16 @@
 
 # We are doing it the command line way
 - name: Enable RabbitMQ Plugins
-  shell: "set -o pipefail && rabbitmq-plugins enable {{ rabbitmq_plugins | join(' ') }}"
+  command: "rabbitmq-plugins enable {{ rabbitmq_plugins | join(' ') }}"
   changed_when: "1 != 1"
+
+- name: Ensure file ownership for plugins
+  file:
+    path: /etc/rabbitmq/enabled_plugins
+    owner: rabbitmq
+    group: rabbitmq
+    mode: '0644'
+    state: file
 
 - name: Open applicable firewall rules
   ansible.posix.firewalld:
