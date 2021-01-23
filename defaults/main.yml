@@ -20,6 +20,9 @@ rabbitmq_env: "default"
 rabbitmq_ldap_servers:
   - ipa001.rockylinux.org
   - ipa002.rockylinux.org
+rabbitmq_ldap_bind_dn: "uid=binder,cn=sysaccounts,cn=etc,dc=rockylinux,dc=org"
+rabbitmq_ldap_bind_pw: "ThisIsNotThePassword1!"
+rabbitmq_ldap_basedn: "cn=accounts,dc=rockylinux,dc=org"
 
 # You can override this in your playbooks as well
 rabbitmq_plugins:
