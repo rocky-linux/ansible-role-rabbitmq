@@ -57,5 +57,5 @@
     tags: monitoring
   when:
     - "'rabbitmq001' in inventory_hostname"
-    - rabbitmq_monitoring_username
-    - rabbitmq_monitoring_password
+    - rabbitmq_monitoring_username is defined
+    - rabbitmq_monitoring_password is defined

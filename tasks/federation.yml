@@ -48,7 +48,7 @@
     vhost: /public_pubsub
   when:
     - rabbitmq_enable_public
-    - pubsub_federation_pass
+    - pubsub_federation_pass is defined
 
 - name: Configure a policy to federate the topic exchange to public
   run_once: true
@@ -63,4 +63,4 @@
     vhost: /public_pubsub
   when:
     - rabbitmq_enable_public
-    - pubsub_federation_pass
+    - pubsub_federation_pass is defined

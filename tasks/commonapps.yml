@@ -29,7 +29,7 @@
   include_tasks: runners/mkqueue.yml
   vars:
     username: "osci-pipeline-{{ rabbitmq_env }}"
-    queue_name: "{{ item }}-{{ rabbitmq_env }}"
+    queue_name: "{{ item }}"
     message_ttl: 432000000
     routing_keys:
       - "org.rockylinux.ci.#"
