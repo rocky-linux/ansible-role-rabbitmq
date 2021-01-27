@@ -11,12 +11,12 @@ rabbitmq_file_limit: 500000
 # You are expected to set these yourself in your playbook
 rabbitmq_cookie: "NotASafeCookie"
 rabbitmq_admin_password: "NotASafePassword"
-rabbitmq_cluster_name: "default"
+rabbitmq_cluster_name: "rabbit"
 rabbitmq_cluster_list:
   - rabbitmq01.rockylinux.org
   - rabbitmq02.rockylinux.org
   - rabbitmq03.rockylinux.org
-rabbitmq_env: "default"
+rabbitmq_env: "production"
 rabbitmq_ldap_servers:
   - ipa001.rockylinux.org
   - ipa002.rockylinux.org
