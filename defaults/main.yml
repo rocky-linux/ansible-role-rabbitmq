@@ -41,3 +41,5 @@ rabbitmq_plugins:
 # Enable the public pubsub or not
 rabbitmq_enable_public: false
 #pubsub_federation_pass: ...
+
+rabbitmq_mbs_password: "ThisIsNotThePassword!"

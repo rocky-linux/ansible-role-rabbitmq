@@ -59,3 +59,18 @@
     - "'rabbitmq001' in inventory_hostname"
     - rabbitmq_monitoring_username is defined
     - rabbitmq_monitoring_password is defined
+
+# Add MBS
+- name: Create MBS User
+  community.rabbitmq.rabbitmq_user:
+    user: "mbs"
+    password: "{{ rabbitmq_mbs_password }}"
+    update_password: always
+    vhost: /mbs
+    configure_priv: "^$"
+    read_priv: "^$"
+    write_priv: "^$"
+  when:
+    - "'rabbitmq001' in inventory_hostname"
+    - rabbitmq_monitoring_username is defined
+    - rabbitmq_monitoring_password is defined

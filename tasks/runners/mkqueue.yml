@@ -19,7 +19,7 @@
     vhost: "{{ vhost|default('/pubsub') }}"
     auto_delete: false
     durable: true
-    message_ttl: "{{ message_ttl|default(omit)) }}"
+    message_ttl: "{{ message_ttl|default(omit) }}"
     state: present
     login_user: rockyadmin
     login_password: "{{ rabbitmq_admin_password }}"
