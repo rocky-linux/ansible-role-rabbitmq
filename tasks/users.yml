@@ -72,5 +72,4 @@
     write_priv: "^$"
   when:
     - "'rabbitmq001' in inventory_hostname"
-    - rabbitmq_monitoring_username is defined
-    - rabbitmq_monitoring_password is defined
+    - rabbitmq_mbs_password is defined
