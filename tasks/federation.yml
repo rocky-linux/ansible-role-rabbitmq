@@ -15,7 +15,7 @@
   community.rabbitmq.rabbitmq_user:
     user: rockypubsub
     permissions:
-      - vhost: /public_pubsub
+      - vhost: public_pubsub
         configure_priv: "^(\\w{8}(-\\w{4}){3}-\\w{12})$"
         write_priv: "^(\\w{8}(-\\w{4}){3}-\\w{12})$"
         read_priv: ".*"
@@ -29,7 +29,7 @@
   community.rabbitmq.rabbitmq_user:
     user: pubsub_federation
     permissions:
-      - vhost: /pubsub
+      - vhost: pubsub
         configure_priv: "^federation.*"
         write_priv: "^federation.*"
         read_priv: ".*"
@@ -45,7 +45,7 @@
     name: "pubsub-to-public_pubsub"
     value: '{"uri": "amqps://pubsub_federation:{{ pubsub_federation_pass }}@{{ rabbitmq_cluster_list[0] }}/%2Fpubsub", "ack-mode": "on-confirm"}'
     state: present
-    vhost: /public_pubsub
+    vhost: public_pubsub
   when:
     - rabbitmq_enable_public
     - pubsub_federation_pass is defined
@@ -60,7 +60,7 @@
     pattern: "^(amq|zmq)\\.topic$"
     tags:
       federation-upstream: "pubsub-to-public_pubsub"
-    vhost: /public_pubsub
+    vhost: public_pubsub
   when:
     - rabbitmq_enable_public
     - pubsub_federation_pass is defined

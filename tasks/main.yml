@@ -65,6 +65,17 @@
     mode: '0644'
     state: file
 
+- name: Ensure file ownership for certificate
+  file:
+    path: "{{ item }}"
+    owner: rabbitmq
+    group: rabbitmq
+    mode: '0600'
+    state: file
+  loop:
+    - "{{ rabbitmq_tls_cert }}"
+    - "{{ rabbitmq_tls_key }}"
+
 - name: Open applicable firewall rules
   ansible.posix.firewalld:
     port: "{{ item }}"

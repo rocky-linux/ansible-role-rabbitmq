@@ -17,8 +17,8 @@ auth_backends.1.authn = ldap
 auth_backends.1.authz = internal
 auth_backends.2       = internal
 auth_mechanisms.1     = PLAIN
+auth_mechanisms.1     = EXTERNAL
 auth_mechanisms.2     = EXTERNAL
-auth_mechanisms.3     = AMQPLAIN
 
 ssl_cert_login_from   = common_name
 auth_ldap.dn_lookup_bind.user_dn  = {{ rabbitmq_ldap_bind_dn }}
@@ -43,7 +43,7 @@ product.name    = RockyMQ!
 product.version = 0.0.1
 
 #disk_free_limit.relative = 2.0
-disk_free_limit.absolute = 10GB
+disk_free_limit.absolute = 2GB
 
 # Cluster Nodes
 {% for mqsrv in rabbitmq_cluster_list %}

@@ -2,7 +2,7 @@
 # Create vhosts
 - name: Configure pubsub virtual host
   community.rabbitmq.rabbitmq_vhost:
-    name: /pubsub
+    name: pubsub
     state: present
   tags:
     - rabbitmq_cluster
@@ -11,7 +11,7 @@
   run_once: true
   delegate_to: "{{ rabbitmq_cluster_list[0] }}"
   community.rabbitmq.rabbitmq_vhost:
-    name: /public_pubsub
+    name: public_pubsub
     state: present
   tags:
     - rabbitmq_cluster
@@ -25,7 +25,7 @@
       ha-mode: all
       ha-sync-mode: automatic
       ha-sync-batch-size: 10000
-    vhost: /pubsub
+    vhost: pubsub
   tags:
     - rabbitmq_cluster
 
@@ -40,7 +40,7 @@
     tags:
       expires: 111600000
       max-length-bytes: 1073741824
-    vhost: /pubsub
+    vhost: pubsub
   tags:
     - rabbitmq_cluster
 
@@ -55,7 +55,7 @@
     tags:
       expires: 3600000
       max-length-bytes: 52428800
-    vhost: /public_pubsub
+    vhost: public_pubsub
   tags:
     - rabbitmq_cluster
 
@@ -63,7 +63,7 @@
   run_once: true
   delegate_to: "{{ rabbitmq_cluster_list[0]  }}"
   community.rabbitmq.rabbitmq_vhost:
-    name: /mbs
+    name: mbs
     state: present
   tags:
     - rabbitmq_cluster
@@ -79,6 +79,6 @@
       ha-mode: all
       ha-sync-mode: automatic
       ha-sync-batch-size: 10000
-    vhost: /mbs
+    vhost: mbs
   tags:
     - rabbitmq_cluster

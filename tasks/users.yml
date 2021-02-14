@@ -20,8 +20,8 @@
   when: "'rabbitmq001' in inventory_hostname"
   with_items:
     - /
-    - /pubsub
-    - /public_pubsub
+    - pubsub
+    - public_pubsub
   tags:
     - rabbitmq_cluster
 
@@ -46,11 +46,11 @@
         configure_priv: "^$"
         read_priv: "^$"
         write_priv: "^$"
-      - vhost: /pubsub
+      - vhost: pubsub
         configure_priv: "^$"
         read_priv: "^$"
         write_priv: "^$"
-      - vhost: /public_pubsub
+      - vhost: public_pubsub
         configure_priv: "^$"
         read_priv: "^$"
         write_priv: "^$"
@@ -66,7 +66,7 @@
     user: "mbs"
     password: "{{ rabbitmq_mbs_password }}"
     update_password: always
-    vhost: /mbs
+    vhost: mbs
     configure_priv: "^$"
     read_priv: "^$"
     write_priv: "^$"

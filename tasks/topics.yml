@@ -6,7 +6,7 @@
   community.rabbitmq.rabbitmq_exchange:
     name: "zmq.topic"
     exchange_type: "topic"
-    vhost: "/pubsub"
+    vhost: "pubsub"
     login_user: rockyadmin
     login_password: "{{ rabbitmq_admin_password }}"
   tags:
@@ -18,7 +18,7 @@
   community.rabbitmq.rabbitmq_exchange:
     name: "zmq.topic"
     exchange_type: "topic"
-    vhost: "/public_pubsub"
+    vhost: "public_pubsub"
     login_user: rockyadmin
     login_password: "{{ rabbitmq_admin_password }}"
   tags:
@@ -32,7 +32,7 @@
     name: zmq.topic
     dest: amq.topic
     routing_key: "#"
-    vhost: "/public_pubsub"
+    vhost: "public_pubsub"
     login_user: rockyadmin
     login_password: "{{ rabbitmq_admin_password }}"
   tags:
