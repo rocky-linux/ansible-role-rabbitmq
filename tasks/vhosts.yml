@@ -82,3 +82,27 @@
     vhost: mbs
   tags:
     - rabbitmq_cluster
+
+- name: Configure distrobuild vhost
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0]  }}"
+  community.rabbitmq.rabbitmq_vhost:
+    name: distrobuild
+    state: present
+  tags:
+    - rabbitmq_cluster
+
+- name: Configure MBS HA Policy
+  run_once: true
+  delegate_to: "{{ rabbitmq_cluster_list[0]  }}"
+  community.rabbitmq.rabbitmq_policy:
+    apply_to: queues
+    name: HA
+    pattern: ".*"
+    tags:
+      ha-mode: all
+      ha-sync-mode: automatic
+      ha-sync-batch-size: 10000
+    vhost: distrobuild
+  tags:
+    - rabbitmq_cluster
