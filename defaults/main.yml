@@ -33,6 +33,7 @@ rabbitmq_plugins:
   - rabbitmq_mqtt
   - rabbitmq_federation
   - rabbitmq_federation_management
+  - rabbitmq_peer_discovery_common
 
 # If you want monitoring, set these in your playbooks
 #rabbitmq_monitoring_username: mq-monitoring
