@@ -92,7 +92,7 @@
     - 25672/tcp
     - 35672-35682/tcp
 
-- name: Non-master nodes: Wait for 001 to be up first
+- name: Non-master nodes should wait for 001 to be up first
   wait_for:
     host: "{{ rabbitmq_cluster_list[0] }}"
     port: '5672'
