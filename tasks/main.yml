@@ -92,6 +92,15 @@
     - 25672/tcp
     - 35672-35682/tcp
 
+- name: Non-master nodes: Wait for 001 to be up first
+  wait_for:
+    host: "{{ rabbitmq_cluster_list[0] }}"
+    port: '5672'
+    delay: '15'
+    connect_timeout: '10'
+    state: started
+  when: "'rabbitmq001' not in inventory_hostname"
+
 - name: Ensure RabbitMQ is running
   service:
     name: rabbitmq-server
