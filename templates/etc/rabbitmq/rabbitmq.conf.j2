@@ -49,5 +49,5 @@ disk_free_limit.absolute = 2GB
 
 # Cluster Nodes
 {% for mqsrv in rabbitmq_cluster_list %}
-cluster_formation.classic_config.nodes.{{ loop.index }} = {{ mqsrv }}
+cluster_formation.classic_config.nodes.{{ loop.index }} = rabbit@{{ mqsrv }}
 {% endfor %}
