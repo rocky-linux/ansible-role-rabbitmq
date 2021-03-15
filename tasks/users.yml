@@ -67,9 +67,9 @@
     password: "{{ rabbitmq_mbs_password }}"
     update_password: always
     vhost: mbs
-    configure_priv: "^*"
-    read_priv: "^*"
-    write_priv: "^*"
+    configure_priv: ".*"
+    read_priv: ".*"
+    write_priv: ".*"
   when:
     - "'rabbitmq001' in inventory_hostname"
     - rabbitmq_mbs_password is defined
@@ -81,9 +81,9 @@
     password: "{{ rabbitmq_mbs_password }}"
     update_password: always
     vhost: distrobuild
-    configure_priv: "^*"
-    read_priv: "^*"
-    write_priv: "^*"
+    configure_priv: ".*"
+    read_priv: ".*"
+    write_priv: ".*"
   when:
     - "'rabbitmq001' in inventory_hostname"
     - rabbitmq_distrobuild_password is defined
