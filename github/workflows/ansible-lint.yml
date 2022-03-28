@@ -21,6 +21,7 @@ jobs:
         run: |
           echo '[defaults]' > ansible.cfg
           echo 'collections_paths = ./collections' >> ansible.cfg
+
       - name: Install role requirements
         run: ansible-galaxy role install -r molecule/requirements.yml
 # TODO: Figure out how to get this not to error so this action is universal

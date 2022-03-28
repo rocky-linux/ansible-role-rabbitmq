@@ -1,7 +1,7 @@
 ---
 # RabbitMQ Tasks
 - name: Install required packages for RabbitMQ
-  yum:
+  ansible.builtin.dnf:
     name: rabbitmq-server
     state: present
 
@@ -12,7 +12,7 @@
     state: true
 
 - name: Deploy RabbitMQ configuration
-  template:
+  ansible.builtin.template:
     src: "etc/rabbitmq/{{ item }}.j2"
     dest: "/etc/rabbitmq/{{ item }}"
     owner: rabbitmq
@@ -25,7 +25,7 @@
     - restart_rabbitmq
 
 - name: Deploy erlang cookie
-  copy:
+  ansible.builtin.copy:
     owner: rabbitmq
     group: rabbitmq
     mode: '0600'
@@ -35,7 +35,7 @@
     - restart_rabbitmq
 
 - name: Create systemd override for RabbitMQ
-  file:
+  ansible.builtin.file:
     path: /etc/systemd/system/rabbitmq-server.service.d
     state: directory
     owner: root
@@ -43,7 +43,7 @@
     mode: '0755'
 
 - name: Override nofile limit for RabbitMQ
-  copy:
+  ansible.builtin.copy:
     dest: /etc/systemd/system/rabbitmq-server.service.d/99-override.conf
     owner: root
     group: root
@@ -54,11 +54,11 @@
 
 # We are doing it the command line way
 - name: Enable RabbitMQ Plugins
-  command: "rabbitmq-plugins enable {{ rabbitmq_plugins | join(' ') }}"
+  ansible.builtin.command: "rabbitmq-plugins enable {{ rabbitmq_plugins | join(' ') }}"
   changed_when: "1 != 1"
 
 - name: Ensure file ownership for plugins
-  file:
+  ansible.builtin.file:
     path: /etc/rabbitmq/enabled_plugins
     owner: rabbitmq
     group: rabbitmq
@@ -66,7 +66,7 @@
     state: file
 
 - name: Ensure file ownership for certificate
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     owner: rabbitmq
     group: rabbitmq
@@ -93,7 +93,7 @@
     - 35672-35682/tcp
 
 - name: Non-master nodes should wait for 001 to be up first
-  wait_for:
+  ansible.builtin.wait_for:
     host: "{{ rabbitmq_cluster_list[0] }}"
     port: '5672'
     delay: '15'
@@ -102,7 +102,7 @@
   when: "'rabbitmq001' not in inventory_hostname"
 
 - name: Ensure RabbitMQ is running
-  service:
+  ansible.builtin.service:
     name: rabbitmq-server
     state: started
     enabled: true

@@ -36,11 +36,11 @@ rabbitmq_plugins:
   - rabbitmq_peer_discovery_common
 
 # If you want monitoring, set these in your playbooks
-#rabbitmq_monitoring_username: mq-monitoring
-#rabbitmq_monitoring_password: NotASafePassword
+# rabbitmq_monitoring_username: mq-monitoring
+# rabbitmq_monitoring_password: NotASafePassword
 
 # Enable the public pubsub or not
 rabbitmq_enable_public: false
-#pubsub_federation_pass: ...
+# pubsub_federation_pass: ...
 
 rabbitmq_mbs_password: "ThisIsNotThePassword!"

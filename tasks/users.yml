@@ -26,7 +26,7 @@
     - rabbitmq_cluster
 
 - name: Drop the admin password in a file for admin operations
-  copy:
+  ansible.builtin.copy:
     dest: /root/.rabbitmqpass
     content: "{{ rabbitmq_admin_password }}"
     mode: '0600'
