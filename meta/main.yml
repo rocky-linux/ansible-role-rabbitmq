@@ -11,7 +11,7 @@ galaxy_info:
         - 8
         - 9
   galaxy_tags: []
-  dependencies:
-    - ansible.posix
-    - community.general
-    - community.rabbitmq
+  dependencies: []
+    # ansible.posix
+    # community.general
+    # community.rabbitmq
