@@ -2,7 +2,7 @@
 galaxy_info:
   author: Louis Abel
   description: RabbitMQ Role
-  company: Rocky Linux Foundation
+  company: Rocky Enterprise Software Foundation
   license: MIT
   min_ansible_version: 2.9
   platforms:
@@ -10,6 +10,7 @@ galaxy_info:
       versions:
         - 8
         - 9
+        - 10
   galaxy_tags: []
   dependencies: []
     # ansible.posix
