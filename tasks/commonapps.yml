@@ -18,7 +18,7 @@
     # 10 Days
     message_ttl: 864000000
     routing_keys:
-      - "org.rockylinux.{{ rabbitmq_env }}.gitlab.#"
+      - "org.rockylinux.{{ rabbitmq_env }}.git.#"
       # Testing only
       - "org.rockylinux.ci.#"
   tags:
